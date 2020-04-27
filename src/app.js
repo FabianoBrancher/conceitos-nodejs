@@ -28,7 +28,6 @@ app.post("/repositories", (request, response) => {
   repositories.push(project);
 
   return response.status(200).json(project);
-
 });
 
 app.put("/repositories/:id", (request, response) => {
@@ -73,16 +72,15 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
 
-  const projectIndex = repositories.findIndex(r => r.id === id);
-  if (projectIndex < 0) {
-    return response.status(400).json({ error: 'Project id not found' });
+  const repository = repositories.find(repository => repository.id === id);
+
+  if (!repository) {
+    return response.status(400).send();
   }
 
-  repositories[projectIndex].likes = repositories[projectIndex].likes + 1;
+  repository.likes += 1;
 
-  const { likes } = repositories[projectIndex];
-
-  return response.status(200).json({ likes });
+  return response.status(200).json(repository);
 
 });
 
